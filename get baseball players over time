@@ -1,0 +1,23 @@
+	SELECT 
+	       Startday,
+	       count(Startday) AS total_started,
+	       SUM(Sallery)/count(Startday) AS AVG_sallery,
+	       AVG(age_started) AS avg_age_started,
+	       AVG(age_ended) AS avg_age_ended,
+	       AVG(age_ended)-AVG(age_started) AS yearsPlayed
+	       INTO New_table
+	       FROM(
+	SELECT 
+	  EXTRACT(year FROM people.birth_date) AS  Birth_Y,
+	  EXTRACT(year FROM people.debut_date) AS Startday,
+	  EXTRACT(year FROM people.debut_date)-EXTRACT(year FROM people.birth_date) AS age_started,
+	  EXTRACT(year FROM people.finalgame_date)-EXTRACT(year FROM people.birth_date) AS age_ended,
+	  salaries.salary AS Sallery,
+	  people.debut_date,
+	  EXTRACT(year FROM people.finalgame_date) AS  finalGame
+	         
+	FROM people
+	INNER JOIN salaries  
+		ON people.playerid = salaries.playerid) as _table
+	  group by Startday
+	ORDER BY Startday DESC;
